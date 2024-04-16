@@ -6,7 +6,7 @@ from fastapi import FastAPI, File, UploadFile, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
-
+done = False
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
@@ -48,6 +48,7 @@ def recognize_from_file(audio_file_path):
                 print("Error details: {}".format(cancellation_details.error_details))
                 print("Did you set the speech resource key and region values?")
     except Exception as e:
+        print(e)
         raise HTTPException(status_code=500, detail=str(e))
 
 @app.post("/convert-audio-to-text/")
