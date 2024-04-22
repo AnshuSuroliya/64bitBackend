@@ -17,7 +17,6 @@ app.add_middleware(
 
 app.include_router(speech_handler_router.router)
 
-
 @app.get("/")
 def greet():
     return "Hello"
