@@ -1,4 +1,6 @@
 import os
+import time
+
 from openai import AzureOpenAI
 import os
 import azure.cognitiveservices.speech as speechsdk
@@ -28,28 +30,43 @@ def recognize_from_microphone():
             print("Error details: {}".format(cancellation_details.error_details))
             print("Did you set the speech resource key and region values?")
 
+def start_questioning():
+    Starting_messages = [
+        {"role": "system", "content": f"You are Interviewer who is interviewing for beginner level {user_input} skill"},
+        {"role": "user", "content": f"Ask me a question on {user_input}"}
+    ]
+    return client.chat.completions.create(temperature=0.3, model=mode_name, messages=Starting_messages).choices[0].message.content
 
-skills = {(1, "Reactjs"), (2, "Angular"), (3, "Java")}
 user_input = input("Enter Your Skill: ")
 
 mode_name = "gpt-4"
 print('Sending a test completion job')
 
-messages = [
-    {"role": "system", "content": "You are Interviewer who ask different question."},
+
+
+Starting_messages = [
+    {"role": "system", "content": f"You are Interviewer who is interviewing for beginner level {user_input} skill"},
     {"role": "user", "content": f"Ask me a question on {user_input}"}
 ]
+Chat_Messages = Starting_messages
+Chat_Messages.append({"role": "system", "content": f"{start_questioning()}"})
 
-response = client.chat.completions.create(temperature=0.3, model=mode_name, messages=messages)
-print(response.choices[0].message.content)
+for i in range(0,2):
 
-for _ in range(4):
+    print(Chat_Messages[len(Chat_Messages) - 1]["content"])
+
     user_follow_up_answer = recognize_from_microphone()
     print(user_follow_up_answer)
-    messages_follow_up = [
-        {"role": "system", "content": "You are Interviewer who ask different question."},
-        {"role": "user", "content": f"ask me a follow up question on {user_follow_up_answer}"}
-    ]
 
-    response_follow_up = client.chat.completions.create(temperature=0.3, model=mode_name, messages=messages_follow_up)
-    print(response_follow_up.choices[0].message.content)
+    Chat_Messages.append({"role": "user", "content": f"My answer is : \n {user_follow_up_answer} \n is this answer is in the context of previous asked questions give output as yes or no onlywithout extra text"})
+    response_follow_up = client.chat.completions.create(temperature=0.3, model=mode_name, messages=Chat_Messages).choices[0].message.content
+    if response_follow_up == "No":
+        print("Answer is out of context!")
+        Chat_Messages.pop()
+        Chat_Messages.pop()
+        Chat_Messages.pop()
+        Chat_Messages.append({"role": "system", "content": f"{start_questioning()}"})
+
+    elif response_follow_up =="Yes":
+        Chat_Messages.append({"role":"user","content":f"since it was an answer in context to question. give me a rating out of 10 only without extra text and ask a followup question sperated by a line break."})
+        Chat_Messages.append({"role":"system","content" : f"{client.chat.completions.create(temperature=0.3, model=mode_name, messages=Chat_Messages).choices[0].message.content}"})
