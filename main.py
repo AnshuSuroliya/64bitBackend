@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from routers.speech import speech_handler_router
 from routers.QuestionBank import question_bank_router
+from routers.authentication import authenticaton_router
 from routers.interview import interview_router
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -21,7 +22,7 @@ app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_credentials=True, 
 app.include_router(speech_handler_router.router)
 app.include_router(question_bank_router.router)
 app.include_router(interview_router.router)
-
+app.include_router(authenticaton_router.router)
 
 async def get_or_create_db(db_name):
     try:
