@@ -1,3 +1,5 @@
+import datetime
+
 from fastapi import FastAPI
 from routers.speech import speech_handler_router
 from routers.QuestionBank import question_bank_router
@@ -15,7 +17,10 @@ from routers.interview.interview_router import get_or_create_interview_container
 config = dotenv_values(".env")
 
 app = FastAPI()
-app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_credentials=True, allow_methods=["*"],
+origins = [
+    "http://localhost:3000",
+]
+app.add_middleware(CORSMiddleware, allow_origins=origins, allow_credentials=True, allow_methods=["*"],
                    allow_headers=["*"])
 
 # all the routers in router package
@@ -39,7 +44,7 @@ async def startup_db_client():
     await get_or_create_db(config["db_name"])
     await get_or_create_interview_container(app)
 
-
 @app.get("/")
 def greet():
-    return "Hello"
+    return datetime.datetime.now()
+

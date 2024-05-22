@@ -18,3 +18,11 @@ class loginRes(BaseModel):
     message:str | None =""
     success:bool |None =""
     jwt:str |None =""
+    email:str | None =""
+
+class UserResponse(BaseModel):
+    firstName: str
+    lastName: str
+    email: str
+class EmailReq(BaseModel):
+    email:str

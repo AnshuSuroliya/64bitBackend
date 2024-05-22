@@ -8,3 +8,4 @@ class QuestionReq(BaseModel):
     prevMessages: list = []
     answer: str = ""
     score: list = []
+    totalQuestion: int = 3

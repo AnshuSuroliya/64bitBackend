@@ -13,6 +13,7 @@ class Question(BaseModel):
 class Skill(BaseModel):
     name: str
     experience: int = 1
+    tot : int = 3
     questions: list[Question] = None
     score: float = 0
     feedback: str = None
