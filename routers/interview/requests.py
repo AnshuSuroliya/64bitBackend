@@ -20,10 +20,11 @@ class Skill(BaseModel):
 
 
 class ScheduleReq(BaseModel):
-    owner: str
+    owner: str =""
     start_time: datetime = datetime.now()
     duration: int = 30
     end_time: datetime = datetime.now() + timedelta(minutes=duration)
+    candidate_name:str
     candidate_email: str
     skills: list[Skill]=[]
 

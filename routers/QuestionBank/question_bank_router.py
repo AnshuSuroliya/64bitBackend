@@ -7,7 +7,7 @@ router = APIRouter()
 
 
 @router.post("/ask")
-async def ask_question(req: QuestionReq):
+async def ask_question(req: QuestionReq,user: dict = Depends(get_current_user)):
     print(req)
     question_count = get_question_count(req.prevMessages)
     if question_count == 0:

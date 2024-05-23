@@ -20,3 +20,8 @@ class InterviewScheduleResponse(BaseModel):
     end_time: datetime = datetime.now()
     candidate_email: str
     skills: list[Skill]
+
+class IResponse(BaseModel):
+    candidate_name:str | None=""
+    skill_name:str | None=""
+    experience:int=1
