@@ -9,3 +9,7 @@ class QuestionReq(BaseModel):
     answer: str = ""
     score: list = []
     totalQuestion: int = 3
+
+class validateQuestionReq(BaseModel):
+    skill: str = ""
+    question: str = ""

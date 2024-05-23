@@ -13,14 +13,14 @@ class Question(BaseModel):
 class Skill(BaseModel):
     name: str
     experience: int = 1
-    tot : int = 3
+    totalQuestion : int = 5
     questions: list[Question] = None
     score: float = 0
     feedback: str = None
 
 
 class ScheduleReq(BaseModel):
-    owner: str
+    candidate_name: str=""
     start_time: datetime = datetime.now()
     duration: int = 30
     end_time: datetime = datetime.now() + timedelta(minutes=duration)

@@ -20,7 +20,7 @@ async def get_or_create_interview_container(app):
         raise
 
 @router.post("/interview/schedule")
-async def schedule_interview(req: Request, schedule_req: ScheduleReq, user: dict = Depends(get_current_user)):
+async def schedule_interview(req: Request, schedule_req: ScheduleReq):
     interview = jsonable_encoder(schedule_req)
     new_interview = await req.app.interview_items_container.create_item(interview, enable_automatic_id_generation=True)
     return new_interview

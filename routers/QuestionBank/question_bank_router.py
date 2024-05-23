@@ -27,3 +27,13 @@ async def get_audio(filename: str):
     if not os.path.exists(file_path):
         raise HTTPException(status_code=404, detail="Audio file not found")
     return FileResponse(file_path)
+
+@router.post("/chk/IsQuestionReleveant")
+async def get_audio(req:validateQuestionReq):
+    messages: list = [
+        {"role": "user",
+         "content": f"tell me if the question: {req.question} is releveant to the skill {req.skill}. if its relevant send only 'True' else send 'False' dont send any other extra text."}
+    ]
+    res = client.chat.completions.create(temperature=1, model=model_name, messages=messages).choices[0].message.content
+
+    return {"isRelevant":res=="True"}
